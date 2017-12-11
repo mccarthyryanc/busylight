@@ -6,6 +6,5 @@ dependencies:
   - ipython
   - click
   - numpy
-  - colorsys
   - pip:
     - hidapi

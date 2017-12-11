@@ -22,6 +22,20 @@ Need to add a udev rule:
 echo "SUBSYSTEM==\"usb\", ATTRS{idVendor}==\"27bb\", ATTRS{idProduct}==\"3bcd\", GROUP=\"$(whoami)\", OWNER=\"$(whoami)\", MODE=\"0664\"" | sudo tee -a /etc/udev/rules.d/30-busylight.rules
 ```
 
+Test out the rules:
+
+```bash
+sudo udevadm test /devices/pci0000:00/0000:00:1d.0/usb2/2-1/2-1.5/2-1.5.2
+```
+
+Where the syspath parameter was pulled from the output of:
+
+```bash
+udevadm info -a -p $(udevadm info -q path -n /dev/bus/usb/002/010)
+```
+
+where the dev path was pulled from `lsusb`.
+
 ## Dependencies
 
 Need to install some things and setup an environment:

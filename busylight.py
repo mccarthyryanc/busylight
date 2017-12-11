@@ -16,12 +16,18 @@ class BusyLight(object):
                  verbose=0):
         super(BusyLight, self).__init__()
         
+        self.tone_names = ['openoffice','funky','fairytale','kuandotrain',
+                           'telephonenordic','telephoneoriginal',
+                           'telephonepickmeup','buzz']
 
         self.red=red
         self.green=green
         self.blue=blue
         self.blink_rate=blink
-        self.tone=tone
+        if hasattr(tone, 'capitalize'):
+            self.tone=tone
+        else:
+            self.tone=self.tone_names[tone]
         self.vol=vol
         self.verbose=verbose
         self._vendor_id = 0x27bb
@@ -36,7 +42,6 @@ class BusyLight(object):
             't': 8,
             'blink':7,
         }
-
         
         self.tones = {
             'openoffice'        : 136,
@@ -214,7 +219,7 @@ def show(red, green, blue, blink, verbose):
     bl.write()
 
 @cli.command()
-@click.option('-t','--tone',type=str, default='openoffice')
+@click.option('-t','--tone', default='openoffice')
 @click.option('--vol',type=int, default=3)
 @click.option('-v','--verbose',help='SHOW ME WHAT YOU GOT!', count=True)
 def say(tone, vol, verbose):
