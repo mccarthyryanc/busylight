@@ -7,13 +7,12 @@ Drawing a lot of inspirtion from these sources:
   * [js-busylight](https://github.com/porsager/busylight)
   * BusyLigt [Specs](https://github.com/porsager/busylight/files/273865/Busylight.API.rev.2.2.-.22052015.pdf)
 
-#Setup
+## Setup
 
 Needed to get the produt and vendor ID. Easist way to grab this was to `lsusb` before and after plugging in the busylight:
   * Vendor: 27bb
   * Product: 3bcd
   * ModelName: BusyLight UC Omega
-
 
 ## Non-Root Access
 
@@ -33,10 +32,9 @@ conda env -f environment.yml
 source activate busylight-env
 ```
 
-# Writing to HID
+## Writing to HID
 
 Mimicking the methodology [here](https://github.com/porsager/busylight/blob/master/lib/busylight.js) buffer is constructed like:
-
   1. Init as `[0,16,0,0,0,0,0,0,128]`
   2. Add fifty zeros `[0]*50`
   3. Append this to end: `[255, 255, 255, 255, 6, 147]`
@@ -66,7 +64,6 @@ Sound Values:
 Volume is controlled by adding `1` to each tone: 0=MUTE, 7=MAX
 
 The last two entries in the buffer are a checksum on the buffer:
-
 ```python
 checksum = sum(self.buffer[0:63])
 self.buffer[63] = (checksum >> 8) & 0xffff
