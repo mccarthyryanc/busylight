@@ -1,0 +1,11 @@
+name: busylight-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6
+  - ipython
+  - click
+  - numpy
+  - colorsys
+  - pip:
+    - hidapi
