@@ -2,11 +2,17 @@
 #
 #
 #
-import hid
-import time
+try:
+    import hid
+    import colorsys
+    import numpy as np
+except ImportError as e:
+    print('Missing a few non-standard modules... can only send commands.')
+
 import click
-import colorsys
-import numpy as np
+import time
+import socket
+import socketserver
 
 class BusyLight(object):
     """
@@ -140,6 +146,7 @@ class BusyLight(object):
         self.reset_buffer()
         self.playlist = []
 
+
 def crazy_lights(length=100, verbose=0, wait_time=1):
     """
     Function to build a playlist of crazy blinking lights.
@@ -167,8 +174,35 @@ def smooth_rainbow(wait_time=1, steps=100, verbose=0):
             bl.add_to_playlist()
     bl.play_sequence(wait_time=wait_time)
 
+# Socket Related Methods
+class MyTCPHandler(socketserver.BaseRequestHandler):
+    """
+    The request handler class for our server.
+
+    It is instantiated once per connection to the server, and must
+    override the handle() method to implement communication to the
+    client.
+    """
+
+    def handle(self):
+        # self.request is the TCP socket connected to the client
+        self.data = self.request.recv(1024).strip()
+        print("Received command from {}".format(self.client_address[0]))
+        command = self.data.decode('utf8')
+        print(command)
+
+        if command == 'done':
+            crazy_lights()
+        else:
+            print(f'unknown command: {command}')
 
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip_addr = s.getsockname()[0]
+    s.close()
+    return ip_addr
 
 
 @click.group()
@@ -230,6 +264,36 @@ def say(tone, vol, verbose):
     bl = BusyLight(tone=tone, vol=vol, verbose=verbose)
     bl.write()
 
+@cli.command()
+@click.argument('port', type=int)
+@click.option('-v','--verbose',help='SHOW ME WHAT YOU GOT!', count=True)
+def serve(port, verbose):
+    """
+    CLI tool to open server and listen for commands.
+    """
+
+    host = get_ip()
+
+    # Create the server, binding to localhost on port 9999
+    with socketserver.TCPServer((host, port), MyTCPHandler) as server:
+        # Activate the server; this will keep running until you
+        # interrupt the program with Ctrl-C
+        server.serve_forever()
+
+@cli.command()
+@click.argument('host', type=str)
+@click.argument('port', type=int)
+@click.argument('command', type=str)
+def send(host, port, command):
+    """
+    CLI tool to send a command to a listening bustlight server.
+    """
+
+    # Create a socket (SOCK_STREAM means a TCP socket)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        # Connect to server and send data
+        sock.connect((host, port))
+        sock.sendall(bytes(command + "\n", "utf-8"))
 
 if __name__ == '__main__':
     cli()
