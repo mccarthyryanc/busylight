@@ -132,6 +132,9 @@ class BusyLight(object):
             print(f'writing: {buff}')
         self.device.write(self.buffer)
 
+    def close(self):
+        self.device.close()
+
     def play_sequence(self, wait_time=1):
         """
         Method to run through a list of buffers to write.
@@ -146,7 +149,6 @@ class BusyLight(object):
         self.reset_buffer()
         self.playlist = []
 
-
 def crazy_lights(length=100, verbose=0, wait_time=1):
     """
     Function to build a playlist of crazy blinking lights.
@@ -159,6 +161,7 @@ def crazy_lights(length=100, verbose=0, wait_time=1):
         bl.set_color(r,g,b)
         bl.add_to_playlist()
     bl.play_sequence(wait_time=wait_time)
+    bl.close()
 
 def smooth_rainbow(wait_time=1, steps=100, verbose=0):
     """
@@ -173,6 +176,15 @@ def smooth_rainbow(wait_time=1, steps=100, verbose=0):
             bl.set_color(R,G,B)
             bl.add_to_playlist()
     bl.play_sequence(wait_time=wait_time)
+    bl.close()
+
+def clear():
+    """
+    Function to clear the buffer and display/play nothing.
+    """
+    bl = BusyLight()
+    bl.write()
+    bl.close()
 
 # Socket Related Methods
 class MyTCPHandler(socketserver.BaseRequestHandler):
@@ -192,7 +204,9 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         print(command)
 
         if command == 'done':
-            crazy_lights()
+            crazy_lights(wait_time=0.1)
+        elif command == 'clear':
+            clear()
         else:
             print(f'unknown command: {command}')
 
