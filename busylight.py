@@ -178,11 +178,11 @@ def smooth_rainbow(wait_time=1, steps=100, verbose=0):
     bl.play_sequence(wait_time=wait_time)
     bl.close()
 
-def clear():
+def clear_bl(verbose=0):
     """
     Function to clear the buffer and display/play nothing.
     """
-    bl = BusyLight()
+    bl = BusyLight(verbose=verbose)
     bl.write()
     bl.close()
 
@@ -206,7 +206,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         if command == 'done':
             crazy_lights(wait_time=0.1)
         elif command == 'clear':
-            clear()
+            clear_bl()
         else:
             print(f'unknown command: {command}')
 
@@ -248,9 +248,7 @@ def clear(verbose):
     """
     CLI tool to write to busylight an "empty" buffer, removes all light/sound. 
     """
-
-    bl = BusyLight(verbose=verbose)
-    bl.write()
+    clear_bl(verbose=verbose)
 
 @cli.command()
 @click.option('-r','--red', type=int, default=0)
@@ -272,7 +270,17 @@ def show(red, green, blue, blink, verbose):
 @click.option('-v','--verbose',help='SHOW ME WHAT YOU GOT!', count=True)
 def say(tone, vol, verbose):
     """
-    CLI tool to write signel sounds to busylight.
+    CLI tool to write signal sounds to busylight. Tone options:
+
+    \b
+        * openoffice (default)
+        * funky
+        * fairytale
+        * kuandotrain
+        * telephonenordic
+        * telephoneoriginal
+        * telephonepickmeup
+        * buzz
     """
 
     bl = BusyLight(tone=tone, vol=vol, verbose=verbose)
