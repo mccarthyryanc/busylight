@@ -5,7 +5,20 @@ Python command line tool to interact with the  Kuando Busylight. This is a work 
 Drawing a lot of inspirtion from these sources:
   * [cython-hidapi](https://github.com/trezor/cython-hidapi/blob/master/try.py)
   * [js-busylight](https://github.com/porsager/busylight)
-  * BusyLigt [Specs](https://github.com/porsager/busylight/files/273865/Busylight.API.rev.2.2.-.22052015.pdf)
+  * BusyLight [Specs](https://github.com/porsager/busylight/files/273865/Busylight.API.rev.2.2.-.22052015.pdf)
+
+## Client-Server CLI
+
+After installing, A quick way to get up a running is with the inlcuded CLI:
+
+```bash
+busylight serve 8787
+```
+
+And then from another terminal:
+```bash
+busylight send localip 8787 done
+```
 
 ## Setup
 
@@ -42,9 +55,20 @@ Need to install some things and setup an environment:
 
 ```bash
 sudo apt install libusb-1.0-0-dev libudev-dev
-conda env -f environment.yml
-source activate busylight-env
 ```
+
+Install with pip:
+```bash
+pip install git+https://github.com/mccarthyryanc/busylight
+```
+
+or, Clone and install:
+```bash
+git clone https://github.com/mccarthyryanc/busylight
+cd busylight
+python setup.py install
+```
+
 
 ## Writing to HID
 
