@@ -21,7 +21,7 @@ class BusyLight(object):
     """
     Simple class for BusyLight
     """
-    def __init__(self, red=0, green=0, blue=0, blink=0, tone='quiet', vol=0):
+    def __init__(self, red=0, green=0, blue=0, blink=0, tone='quiet', vol=0, vendor_id=0x27bb, product_id=0x3bcd):
         super(BusyLight, self).__init__()
         
         self.tone_names = ['openoffice','funky','fairytale','kuandotrain',
@@ -37,8 +37,8 @@ class BusyLight(object):
         else:
             self.tone=self.tone_names[tone]
         self.vol=vol
-        self._vendor_id = 0x27bb
-        self._product_id = 0x3bcd
+        self._vendor_id = vendor_id
+        self._product_id = product_id
         self.buffer = None
         self.playlist = []
 
