@@ -1,4 +1,15 @@
-# Busylight
+# Attention: Project has moved to GitLab
+
+I've moved this project to GitLab:
+https://gitlab.com/ryanmcginger/busylite
+
+And also setup a pypi project:
+https://pypi.org/project/busylite/
+
+Install via pip and follow on GitLab for updates! Sorry for any trouble this might cause!
+
+
+
 
 Python command line tool to interact with the  Kuando Busylight. This is a work in progress and real rough... so use at your own risk!
 
